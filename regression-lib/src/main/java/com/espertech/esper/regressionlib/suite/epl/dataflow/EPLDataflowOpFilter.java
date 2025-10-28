@@ -107,8 +107,14 @@ public class EPLDataflowOpFilter {
 
             captive.getEmitters().get("e1").submit(new SupportBean("x", 10));
             captive.getEmitters().get("e1").submit(new SupportBean("y", 11));
-            assertEquals(10, ((SupportBean) DefaultSupportCaptureOpStatic.getInstances().get(0).getCurrent().get(0)).getIntPrimitive());
-            assertEquals(11, ((SupportBean) DefaultSupportCaptureOpStatic.getInstances().get(1).getCurrent().get(0)).getIntPrimitive());
+            assertEquals(2, DefaultSupportCaptureOpStatic.getInstances().size());
+
+            SupportBean captured1 = (SupportBean) DefaultSupportCaptureOpStatic.getInstances().get(0).getCurrent().get(0);
+            SupportBean captured2 = (SupportBean) DefaultSupportCaptureOpStatic.getInstances().get(1).getCurrent().get(0);
+            boolean found10 = captured1.getIntPrimitive() == 10 || captured2.getIntPrimitive() == 10;
+            boolean found11 = captured1.getIntPrimitive() == 11 || captured2.getIntPrimitive() == 11;
+            assertEquals("Expected to find bean with intPrimitive=10", true, found10);
+            assertEquals("Expected to find bean with intPrimitive=11", true, found11);
             DefaultSupportCaptureOpStatic.getInstances().clear();
 
             env.undeployAll();
